@@ -169,7 +169,7 @@ lambda_function.py 이 Lambda 함수는 AWS Glue와 Athena를 활용하여 야�
 로컬 머신이나 AWS 환경에 repository를 복제합니다.
 git clone https://github.com/psps97/text-2-sql-agent.git
 
-## Usage
+## 사용법 (절차)
 
 1. `create_and_invoke_sql_agent.ipynb` Jupyter Notebook을 열어 시작합니다.
 2. 노트북 셀을 순서대로 실행합니다. 노트북은 다음을 수행합니다.
