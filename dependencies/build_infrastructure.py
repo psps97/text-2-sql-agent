@@ -109,7 +109,37 @@ except:
 policy_arns = [
     'arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess',
     'arn:aws:iam::aws:policy/AmazonS3FullAccess',
+    # 추가적인 Glue 권한을 위한 정책
+    'arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'
 ]
+
+
+# 또는 특정 Glue 권한만 포함하는 인라인 정책을 추가
+glue_inline_policy = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "glue:CreateCrawler",
+                "glue:StartCrawler",
+                "glue:GetCrawler",
+                "glue:DeleteCrawler"
+            ],
+            "Resource": f"arn:aws:glue:{region}:{sts_response}:crawler/*"
+        }
+    ]
+}
+
+# 인라인 정책 추가
+try:
+    iam_client.put_role_policy(
+        RoleName=glue_role_name,
+        PolicyName='GlueSpecificPermissions',
+        PolicyDocument=json.dumps(glue_inline_policy)
+    )
+except ClientError as e:
+    print(f"Error adding inline policy: {e}")
 
 for policy_arn in policy_arns:
     iam_client.attach_role_policy(
@@ -122,6 +152,78 @@ for policy_arn in policy_arns:
 # )
 # pprint.pprint(crawler)
 print(s3_target)
+
+import boto3
+from botocore.exceptions import ClientError
+
+iam_client = boto3.client('iam')
+
+def get_sagemaker_role_name():
+    try:
+        paginator = iam_client.get_paginator('list_roles')
+        pattern = 'SageMakerExecutionRole'
+        
+        for page in paginator.paginate():
+            for role in page['Roles']:
+                if pattern in role['RoleName']:
+                    return role['RoleName']
+        return None
+    except ClientError as e:
+        print(f"Error getting role: {e}")
+        return None
+
+sagemaker_role_name = get_sagemaker_role_name()
+
+if sagemaker_role_name:
+    print(f"Found SageMaker execution role: {sagemaker_role_name}")
+    
+    # Glue 권한을 포함하는 정책 문서
+    glue_policy = {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "glue:CreateCrawler",
+                    "glue:StartCrawler",
+                    "glue:GetCrawler",
+                    "glue:DeleteCrawler",
+                    "glue:GetDatabase",
+                    "glue:CreateDatabase",
+                    "glue:GetTable",
+                    "glue:CreateTable",
+                    "glue:DeleteTable",
+                    "glue:UpdateTable",
+                    "glue:GetPartitions",
+                    "glue:CreatePartition",
+                    "glue:BatchCreatePartition",
+                    "glue:GetUserDefinedFunctions"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+    
+    try:
+        # 인라인 정책 추가
+        iam_client.put_role_policy(
+            RoleName=sagemaker_role_name,
+            PolicyName='GlueFullAccess',
+            PolicyDocument=json.dumps(glue_policy)
+        )
+        print(f"Successfully added Glue permissions to role: {sagemaker_role_name}")
+    except ClientError as e:
+        print(f"Error adding Glue permissions to SageMaker role: {e}")
+else:
+    print("SageMaker execution role not found")
+
+# 권한이 적용되기까지 잠시 대기
+import time
+print("Waiting for 15 seconds to allow permissions to propagate...")
+time.sleep(15)
+
+
+
 
 try:
     glue.create_crawler(
