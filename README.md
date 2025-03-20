@@ -94,6 +94,16 @@ MLB 선수들의 연봉 정보를 담고 있는 테이블입니다. 1985년 Atla
 - Retrieve database schemas
 - Execute SQL queries
 
+## 람다 함수의 역할
+
+lambda_function.py 이 Lambda 함수는 AWS Glue와 Athena를 활용하여 야구 데이터베이스를 조회하는 두 가지 주요 기능을 제공합니다:
+
+1. `/getschema` 경로: Glue 클라이언트를 사용하여 'thehistoryofbaseball' 데이터베이스의 모든 테이블 스키마를 조회
+
+2. `/querydatabase` 경로: Athena 클라이언트를 통해 사용자가 요청한 SQL 쿼리를 실행하고 결과를 반환
+
+함수는 입력된 event의 apiPath에 따라 적절한 작업을 수행하고, 결과를 JSON 형식으로 포맷팅하여 반환합니다. 오류 처리와 쿼리 실행 상태 모니터링도 포함되어 있습니다.
+
 
 ## 필수 조건
 
