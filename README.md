@@ -5,9 +5,10 @@
 **Yeonkyung Park** @yeonkp
 
 ## Introduction
-자연어 처리의 힘을 활용한 "Text to SQL Bedrock Agent"는 자연어 질문을 실행 가능한 SQL 쿼리로 자동 변환하는 것을 용이하게 합니다. 
+자연어 처리를 활용한 "Text to SQL Bedrock Agent"는 자연어 질문을 실행 가능한 SQL 쿼리로 자동 변환하는 것을 용이하게 합니다. 
 이 도구는 복잡한 데이터베이스 구조와 직관적인 인간 질문 간의 격차를 메우며, 사용자는 간단한 영어 프롬프트를 사용하여 데이터에서 쉽게 통찰력을 추출할 수 있습니다. 
-AWS Bedrock의 최첨단 에이전트 기술을 활용하고 AWS의 강력한 인프라와 AWS Bedrock에서 제공하는 고급 대규모 언어 모델 간의 시너지를 보여주며, 정교한 데이터 분석을 더 많은 사람이 이용할 수 있도록 합니다.
+AWS Bedrock의 에이전트 기술을 활용하고 
+AWS의 강력한 인프라와 AWS Bedrock에서 제공하는 LLM간의 시너지를 보여주며, 정교한 데이터 분석을 더 많은 사람이 이용할 수 있도록 합니다.
 이 repository에는 AWS 서비스와 함께 Bedrock Agent를 사용하여 Text to SQL 변환을 설정하고 테스트하는 데 필요한 파일이 포함되어 있습니다.
 
 ![sequence-flow-agent](images/text-to-sql-architecture-Athena.png)
