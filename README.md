@@ -95,6 +95,25 @@ MLB 선수들의 연봉 정보를 담고 있는 테이블입니다. 1985년 Atla
 - Retrieve database schemas
 - Execute SQL queries
 
+전체 실행 플로우를 설명하면 다음과 같습니다.
+
+Text2SQL에서 자연어 질의를 SQL 쿼리로 변환하는 역할은 Bedrock Agent가 사용하는 기반 모델(Foundation Model)인 Calude 모델이 수행합니다.
+
+1. 사용자가 자연어로 질문을 입력
+
+2. Bedrock Agent가 이를 Claude 모델에 전달하면서:
+   - getschema 도구를 통해 얻은 데이터베이스 스키마 정보
+   - agent_instruction에 정의된 SQL 생성 지침을 함께 제공
+
+3. Claude 모델이:
+   - 스키마를 이해하고
+   - 자연어 질문을 분석하여
+   - 적절한 SQL 쿼리를 생성
+
+4. 생성된 SQL 쿼리는 Lambda 함수를 통해 Athena에서 실행됨
+
+따라서 실제 자연어→SQL 변환의 핵심은 Claude 모델이 담당하며, Bedrock Agent는 이 프로세스를 조율하는 역할을 합니다.
+
 ## 람다 함수의 역할
 
 lambda_function.py 이 Lambda 함수는 AWS Glue와 Athena를 활용하여 야구 데이터베이스를 조회하는 두 가지 주요 기능을 제공합니다:
