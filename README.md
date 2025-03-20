@@ -104,6 +104,47 @@ lambda_function.py 이 Lambda 함수는 AWS Glue와 Athena를 활용하여 야�
 
 함수는 입력된 event의 apiPath에 따라 적절한 작업을 수행하고, 결과를 JSON 형식으로 포맷팅하여 반환합니다. 오류 처리와 쿼리 실행 상태 모니터링도 포함되어 있습니다.
 
+## dependencies 설명
+
+**1. config.py**
+
+이 코드는 AWS 서비스를 사용하기 위한 초기 설정과 변수 정의를 담당합니다.
+이 설정들은 텍스트를 SQL로 변환하는 Bedrock 에이전트 생성과 관련된 AWS 리소스들을 관리하기 위한 기본 구성을 제공합니다.
+1-1. 필요한 AWS 서비스(Bedrock, Lambda, S3, Glue, Athena 등)의 클라이언트 초기화
+1-2. 현재 AWS 리전과 계정 ID를 가져와서 리소스 이름에 사용할 suffix 생성
+1-3. 에이전트, 버킷, 정책, 역할, 람다 함수 등의 리소스 이름 정의
+1-4. 데이터베이스, 크롤러, 파일 경로 등 Glue와 관련된 설정 정의
+1-5. 로깅 설정과 기본 경로 설정
+
+**2. build_infrastructure.py**
+
+이 코드는 AWS Bedrock Agent를 설정하고 배포하는 전체 프로세스를 구현합니다.
+자연어로 SQL 쿼리를 생성하고 실행할 수 있는 완전한 Bedrock Agent가 구성됩니다.
+
+2-1. S3 버킷 생성 및 API 스키마 업로드
+2-2. Glue 데이터베이스와 크롤러 생성, 데이터 업로드 및 크롤링 실행
+2-3. Lambda 함수 생성 (SQL 쿼리 실행용)을 위한 IAM 역할과 정책 설정
+2-4. Bedrock Agent를 위한 IAM 정책과 역할 생성
+2-5. Bedrock Agent 생성 (SQL 쿼리 지원을 위한 설정 포함)
+2-6. Agent Action Group 생성 및 Lambda 함수와 연결
+2-7. Lambda 함수에 Bedrock 호출 권한 부여
+2-8. Agent 준비(prepare) 및 별칭(alias) 생성
+
+**3. text_to_sql_openapi_schema.json**
+이 OpenAPI 스키마 문서는 데이터베이스 조회를 위한 두 가지 API 엔드포인트를 정의하고 있습니다:
+이 스키마는 API의 요청/응답 구조, 데이터 타입, 필수 필드 등을 명확히 정의하여 API 사용자들이 쉽게 이해하고 활용할 수 있도록 합니다.
+
+3-1. `/getschema` (GET):
+- 데이터베이스의 모든 테이블과 스키마 정보를 조회
+- 각 테이블의 이름과 컬럼 구조를 반환
+- 200 응답으로 JSON 배열 형태의 테이블 정보 제공
+
+3-2. `/querydatabase` (POST):
+- SQL 쿼리를 실행하여 데이터베이스에서 정보를 검색
+- 요청 본문에 SQL 쿼리문 필요
+- 성공 시 200 응답으로 쿼리 결과 반환, 실패 시 400 에러
+- 한 번에 하나의 SQL 쿼리만 처리 가능
+
 
 ## 필수 조건
 
