@@ -92,8 +92,8 @@ MLB 선수들의 연봉 정보를 담고 있는 테이블입니다. 1985년 Atla
 아래 다이어그램은 이 솔루션의 아키텍처를 간략하게 설명합니다.
 
 에이전트는 다음을 위해 설계되었습니다.
-- Retrieve database schemas
-- Execute SQL queries
+- 데이터베이스 스키마 검색
+- SQL 쿼리 실행
 
 전체 실행 플로우를 설명하면 다음과 같습니다.
 
@@ -191,8 +191,8 @@ git clone https://github.com/psps97/text-2-sql-agent.git
 
 ## 사용법 (절차)
 
-1. `create_and_invoke_sql_agent.ipynb` Jupyter Notebook을 열어 시작합니다.
-2. 노트북 셀을 순서대로 실행합니다. 노트북은 다음을 수행합니다.
+1. **`create_and_invoke_sql_agent.ipynb`** **Jupyter Notebook**을 열어 시작합니다.
+2. **노트북 셀을 순서대로 실행**합니다. 노트북은 다음을 수행합니다.
 - `config.py`에서 구성을 가져옵니다.
 - 고유한 `AWS_PROFILE'을 설정합니다.
 - `build_infrastructure.py`를 사용하여 필요한 인프라를 빌드합니다. 여기에는 다음이 포함됩니다.
@@ -202,5 +202,5 @@ git clone https://github.com/psps97/text-2-sql-agent.git
 - Glue 데이터베이스 및 크롤러
 - 필요한 IAM 역할 및 정책
 3. 인프라가 설정되면 노트북 내에서 샘플 쿼리를 실행하여 에이전트를 테스트할 수 있습니다.
-4. 생성된 모든 리소스를 삭제하고 지속적인 요금을 피하려면 노트북에서 clean.py 스크립트를 실행합니다.
+4. 생성된 모든 리소스를 삭제하고 지속적인 요금을 피하려면 노트북에서 **clean.py** 스크립트를 실행합니다.
 
